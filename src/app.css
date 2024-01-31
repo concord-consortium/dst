@@ -1,0 +1,31 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* map and colorbar plot */
+.app > div:nth-child(1) {
+  height: 45vh;
+  display: flex;
+  flex-grow: 1;
+}
+  /* map */
+  .app > div:nth-child(1) > div:nth-child(1) {
+    flex-grow: 1;
+  }
+  /* colorbar plot */
+  .app > div:nth-child(1) > div:nth-child(2) {
+    width: 10vw;
+  }
+
+/* xy plot */
+.app > div:nth-child(3) {
+  flex-grow: 1;
+  height: 50vh;
+}
