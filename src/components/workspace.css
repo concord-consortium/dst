@@ -31,3 +31,10 @@
 .workspace > .graph-container > div:nth-child(2) {
   width: 25vw;
 }
+
+.workspace > .debug-container {
+  padding: 0.5rem;
+}
+.workspace > .debug-container > span {
+  padding: 0 0.5rem;
+}

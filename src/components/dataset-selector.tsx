@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useGlobalStateContext } from '../hooks/use-global-state'
-import { IDataSet, IDataSetInfo, IDataSetRow, IYMDDate } from '../types'
+import { IDataSet, IDataSetInfo, IRawDataSet } from '../types'
 
 import './dataset-selector.css'
 
@@ -19,21 +19,26 @@ function DataSetSelector() {
     try {
       const url = `datasets/${info.filename}`
       const result = await fetch(url)
-      const rows: IDataSetRow[] = await result.json()
+      const {positions, observations} = await result.json() as IRawDataSet
 
-      const ymdDatesSet = new Set<IYMDDate>()
-      const {minValue, maxValue} = rows.reduce((acc, cur) => {
-        acc.minValue = Math.min(acc.minValue, cur.value)
-        acc.maxValue = Math.max(acc.maxValue, cur.value)
-        return acc
+      const ymdDates = Object.keys(observations)
+
+      const {minValue, maxValue} = Object.values(observations).reduce((acc, values) => {
+        return values.reduce((acc2, value) => {
+          if (value !== null) {
+            acc2.minValue = Math.min(acc2.minValue, value)
+            acc2.maxValue = Math.max(acc2.maxValue, value)
+          }
+          return acc2
+        }, acc)
       }, {minValue: Infinity, maxValue: -Infinity})
 
-      const ymdDates = Array.from(ymdDatesSet)
       ymdDates.sort()
 
       const dataSet: IDataSet = {
         info,
-        rows,
+        positions,
+        observations,
         ymdDates,
         minValue,
         maxValue,
