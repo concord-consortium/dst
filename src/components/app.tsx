@@ -1,4 +1,4 @@
-import { GlobalStateContext, useGlobalStateContextValue } from '../hooks/use-global-state'
+import { GlobalStateContext, getDefaultState, useGlobalStateContextValue } from '../hooks/use-global-state'
 
 import Workspace from './workspace'
 import DataSetSelector from './dataset-selector'
@@ -9,7 +9,7 @@ function App() {
   const globalState = useGlobalStateContextValue()
   const {globalState: { dataSet }, setGlobalState} = globalState
 
-  const handleClearDataSet = () => setGlobalState({})
+  const handleClearDataSet = () => setGlobalState(getDefaultState())
 
   return (
     <GlobalStateContext.Provider value={globalState}>

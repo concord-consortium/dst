@@ -26,7 +26,7 @@ function TimeSlider() {
     setGlobalState(draft => {
       draft.selectedYMDDate = ymdDates[value]
     })
-  }, [ymdDates, value])
+  }, [ymdDates, value, setGlobalState])
 
   const displayDates = useMemo(() => {
     return ymdDates.map(ymdDate => formatDate(new Date(ymdDate)))

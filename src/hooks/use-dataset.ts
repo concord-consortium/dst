@@ -4,6 +4,6 @@ export const useDataSet = () => {
   const {globalState: {dataSet}} = useGlobalStateContext()
 
   return {
-    dataSet: dataSet!
+    dataSet: dataSet!,
   }
 }
