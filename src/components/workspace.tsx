@@ -8,7 +8,7 @@ import { useGlobalStateContext } from '../hooks/use-global-state'
 import './workspace.css'
 
 function Workspace() {
-  const {globalState: {selectedYMDDate, selectedPosition}} = useGlobalStateContext()
+  const {globalState: {selectedYMDDate, selectedNumericPositions: selectedPositions}} = useGlobalStateContext()
   const { dataSet } = useDataSet()
 
   return (
@@ -29,7 +29,7 @@ function Workspace() {
         <span>{Object.keys(dataSet.positions).length} positions</span>
         <span><strong>GLOBAL STATE:</strong></span>
         <span>Date: {selectedYMDDate ?? "n/a"}</span>
-        <span>Position: {selectedPosition ? JSON.stringify(selectedPosition) : "n/a"}</span>
+        <span># Positions: {selectedPositions.length}</span>
       </div>
     </div>
   )

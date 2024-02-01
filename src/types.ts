@@ -11,19 +11,19 @@ export interface IDataSetInfo {
   observationName: string
 }
 
-export interface IPosition {
-  lat: number
-  long: number
-}
-
 export interface IRawDataSet {
   positions: ILatLongMap
   observations: IObservationMap
 }
 
+export interface INumericPosition {
+  key: string, lat: number, lng: number, index: number
+}
+
 export interface IDataSet {
   info: IDataSetInfo
   positions: ILatLongMap
+  numericPositions: INumericPosition[]
   observations: IObservationMap
   ymdDates: IYMDDate[]
   minValue: number
@@ -34,6 +34,6 @@ export interface IDataSet {
 export interface IGlobalState {
   dataSet?: IDataSet
   selectedYMDDate?: IYMDDate
-  selectedPosition?: IPosition
+  selectedNumericPositions: INumericPosition[]
 }
 

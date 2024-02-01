@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useGlobalStateContext } from '../hooks/use-global-state'
-import { IDataSet, IDataSetInfo, IRawDataSet } from '../types'
+import { IDataSet, IDataSetInfo, INumericPosition, IRawDataSet } from '../types'
 
 import './dataset-selector.css'
 
 const availableDataSets: IDataSetInfo[] = [
-  {name: "NOAA Weather", filename: "noaa-weather.json", description: "", observationName: "TDB"},
+  // {name: "NOAA Weather", filename: "noaa-weather.json", description: "", observationName: "TDB"},
   {name: "NEO Precipitation", filename: "neo-precip.json", description: "", observationName: "Precipitation"},
 ]
 
@@ -22,6 +22,7 @@ function DataSetSelector() {
       const {positions, observations} = await result.json() as IRawDataSet
 
       const ymdDates = Object.keys(observations)
+      ymdDates.sort()
 
       const {minValue, maxValue} = Object.values(observations).reduce((acc, values) => {
         return values.reduce((acc2, value) => {
@@ -33,11 +34,17 @@ function DataSetSelector() {
         }, acc)
       }, {minValue: Infinity, maxValue: -Infinity})
 
-      ymdDates.sort()
+      // for easy lookup of lat/long
+      const numericPositions: INumericPosition[] = []
+      for (const [latLng, index] of Object.entries(positions)) {
+        const [lat, lng] = latLng.split(",")
+        numericPositions.push({key: latLng, lat: Number(lat), lng: Number(lng), index})
+      }
 
       const dataSet: IDataSet = {
         info,
         positions,
+        numericPositions,
         observations,
         ymdDates,
         minValue,
@@ -45,7 +52,9 @@ function DataSetSelector() {
         range: maxValue - minValue
       }
 
-      setGlobalState({ dataSet })
+      setGlobalState(draft => {
+        draft.dataSet = dataSet
+      })
     } catch (e) {
       alert(e)
     }
