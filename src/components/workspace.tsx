@@ -8,15 +8,15 @@ import './workspace.css'
 function Workspace() {
   return (
     <div className='workspace'>
-      <div>
+      <div className='map-container'>
         <Map />
-        <ColorbarPlot />
       </div>
-      <div>
+      <div className='timeslider-container'>
         <TimeSlider />
       </div>
-      <div>
+      <div className='graph-container'>
         <XYPlot />
+        <ColorbarPlot />
       </div>
     </div>
   )

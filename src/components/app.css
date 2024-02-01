@@ -16,9 +16,11 @@ header {
   display: flex;
   justify-content: space-between;
 }
+/* logo */
 header > div:nth-child(1) {
   font-weight: bold;
 }
+/* dataset name */
 header > div:nth-child(2) {
   cursor: pointer;
 }

@@ -6,21 +6,28 @@
   height: 100%;
 }
 
-/* map and colorbar plot */
-.workspace > div:nth-child(1) {
+.workspace > .map-container {
   display: flex;
   flex-grow: 1;
 }
-  /* map */
-  .workspace > div:nth-child(1) > div:nth-child(1) {
-    flex-grow: 1;
-  }
-  /* colorbar plot */
-  .workspace > div:nth-child(1) > div:nth-child(2) {
-    width: 10vw;
-  }
-
-/* xy plot */
-.workspace > div:nth-child(3) {
+/* leaflet map */
+.workspace > .map-container > div:nth-child(1) {
   flex-grow: 1;
+}
+
+.workspace > .timeslider-container {
+  display: flex;
+}
+
+.workspace > .graph-container {
+  display: flex;
+  flex-grow: 1;
+}
+/* xyplot */
+.workspace > .graph-container > div:nth-child(1) {
+  flex-grow: 1;
+}
+/* colorbar plot */
+.workspace > .graph-container > div:nth-child(2) {
+  width: 25vw;
 }
