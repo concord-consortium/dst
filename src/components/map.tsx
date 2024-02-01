@@ -1,30 +1,49 @@
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
-import { LatLngExpression } from 'leaflet';
+import { icon, Icon, LatLngExpression } from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
 import { useDataSet } from '../hooks/use-dataset';
 import { useGlobalStateContext } from '../hooks/use-global-state';
-import { INumericPosition } from '../types';
+import { INumericPosition, IPosition } from '../types';
+import { Color, colors } from '../helpers/colors';
 
 import "./map.css"
 
 const usCenter: LatLngExpression = [39.833333, -98.585522]
 
-function MapMarker({numericPosition}: {numericPosition: INumericPosition}) {
+const createIcon = (colorName: string) => {
+  return icon({
+    iconUrl: `assets/marker-icon-${colorName}.png`,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  })
+}
+
+const markerIcons: Record<Color, Icon> = {
+  "#2A81CB": createIcon("blue"),
+  "#FFD326": createIcon("gold"),
+  "#CB2B3E": createIcon("red"),
+  "#2AAD27": createIcon("green"),
+  "#CB8427": createIcon("orange"),
+}
+
+function MapMarker({position}: {position: IPosition}) {
   const {setGlobalState} = useGlobalStateContext()
+  const {numericPosition, color} = position
   const {key, lat, lng} = numericPosition
 
   const handleRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     e.stopPropagation()
     setGlobalState(draft => {
-      const index = draft.selectedNumericPositions.findIndex(np => np.key === key)
-      draft.selectedNumericPositions.splice(index, 1)
+      const index = draft.selectedPositions.findIndex(np => np.numericPosition.key === key)
+      draft.selectedPositions.splice(index, 1)
     })
   }
 
   return (
-    <Marker position={[lat, lng]}>
+    <Marker position={[lat, lng]} icon={markerIcons[color]}>
       <Popup>
         {key}
         <button onClick={handleRemove}>Remove</button>
@@ -36,7 +55,7 @@ function MapMarker({numericPosition}: {numericPosition: INumericPosition}) {
 function MapClickLayer() {
   const map = useMap()
   const {dataSet} = useDataSet()
-  const {globalState: {selectedNumericPositions}, setGlobalState} = useGlobalStateContext()
+  const {globalState: {selectedPositions: selectedNumericPositions}, setGlobalState} = useGlobalStateContext()
 
   useMapEvents({
     click: (e) => {
@@ -55,9 +74,15 @@ function MapClickLayer() {
       if (result.numericPosition) {
         const numericPosition = result.numericPosition
         setGlobalState(draft => {
-          const index = draft.selectedNumericPositions.findIndex(np => np.key === numericPosition.key)
+          const index = draft.selectedPositions.findIndex(np => np.numericPosition.key === numericPosition.key)
           if (index === -1) {
-            draft.selectedNumericPositions.push(numericPosition)
+            const replace = draft.selectedPositions.length >= colors.length
+            if (replace) {
+              draft.selectedPositions.shift()
+            }
+            const availableColors = [...colors]
+            draft.selectedPositions.forEach(cur => availableColors.splice(availableColors.indexOf(cur.color), 1))
+            draft.selectedPositions.push({numericPosition, color: availableColors[0]})
           }
         })
       }
@@ -66,7 +91,7 @@ function MapClickLayer() {
 
   return (
     <>
-      {selectedNumericPositions.map(np => <MapMarker key={np.key} numericPosition={np} />)}
+      {selectedNumericPositions.map(np => <MapMarker key={np.numericPosition.key} position={np} />)}
     </>
   )
 }
