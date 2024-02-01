@@ -1,27 +1,25 @@
 import { GlobalStateContext, useGlobalStateContextValue } from '../hooks/use-global-state'
-import ColorbarPlot from './colorbar-plot'
-import Map from "./map"
-import TimeSlider from './time-slider'
-import XYPlot from './xy-plot'
+
+import Workspace from './workspace'
+import DataSetSelector from './dataset-selector'
 
 import './app.css'
 
 function App() {
   const globalState = useGlobalStateContextValue()
+  const {globalState: { dataSet }, setGlobalState} = globalState
+
+  const handleClearDataSet = () => setGlobalState({})
 
   return (
     <GlobalStateContext.Provider value={globalState}>
       <div className='app'>
-        <div>
-          <Map />
-          <ColorbarPlot />
-        </div>
-        <div>
-          <TimeSlider />
-        </div>
-        <div>
-          <XYPlot />
-        </div>
+        <header>
+          <div>DST: SpaceTime</div>
+          {dataSet && <div role='button' onClick={handleClearDataSet} title="Click here to select a different dataset">{dataSet.info.name}</div>}
+        </header>
+        {!dataSet && <DataSetSelector />}
+        {dataSet && <Workspace />}
       </div>
     </GlobalStateContext.Provider>
   )

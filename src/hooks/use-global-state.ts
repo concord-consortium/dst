@@ -5,19 +5,19 @@ import { IGlobalState } from "../types";
 const defaultState: IGlobalState = {}
 
 export interface IGlobalStateContext {
-  state: IGlobalState;
-  setState: Updater<IGlobalState>;
+  globalState: IGlobalState;
+  setGlobalState: Updater<IGlobalState>;
 }
 
 export const useGlobalStateContextValue = (): IGlobalStateContext => {
-  const [state, setState] = useImmer<IGlobalState>(defaultState);
+  const [globalState, setGlobalState] = useImmer<IGlobalState>(defaultState);
 
   return {
-    state,
-    setState
+    globalState,
+    setGlobalState
   };
 };
 
 // note: the "setState: () => undefined" is fine as it is overridden in the AppContainer.Provider tag
-export const GlobalStateContext = createContext<IGlobalStateContext>({state: defaultState, setState: () => undefined});
-export const useStateContext = () => useContext(GlobalStateContext);
+export const GlobalStateContext = createContext<IGlobalStateContext>({globalState: defaultState, setGlobalState: () => undefined});
+export const useGlobalStateContext = () => useContext(GlobalStateContext);
