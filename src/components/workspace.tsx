@@ -2,12 +2,14 @@ import ColorbarPlot from './colorbar-plot'
 import Map from "./map"
 import TimeSlider from './time-slider'
 import XYPlot from './xy-plot'
-
-import './workspace.css'
+import { useDataSet } from '../hooks/use-dataset'
 import { useGlobalStateContext } from '../hooks/use-global-state'
 
+import './workspace.css'
+
 function Workspace() {
-  const {globalState: {dataSet}} = useGlobalStateContext()
+  const {globalState: {selectedYMDDate, selectedPosition}} = useGlobalStateContext()
+  const { dataSet } = useDataSet()
 
   return (
     <div className='workspace'>
@@ -21,14 +23,14 @@ function Workspace() {
         <XYPlot />
         <ColorbarPlot />
       </div>
-      {dataSet && <div className='debug-container'>
-        <span><strong>DATASET INFO:</strong></span>
+      <div className='debug-container'>
+        <span><strong>DATASET:</strong></span>
         <span>{Object.keys(dataSet.observations).length} dates</span>
         <span>{Object.keys(dataSet.positions).length} positions</span>
-        <span>Min: {dataSet.minValue}</span>
-        <span>Max: {dataSet.maxValue}</span>
-        <span>Range: {dataSet.range}</span>
-      </div>}
+        <span><strong>GLOBAL STATE:</strong></span>
+        <span>Date: {selectedYMDDate ?? "n/a"}</span>
+        <span>Position: {selectedPosition ? JSON.stringify(selectedPosition) : "n/a"}</span>
+      </div>
     </div>
   )
 }
