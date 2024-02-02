@@ -4,7 +4,7 @@ import { icon, Icon, LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useDataSet } from '../hooks/use-dataset';
 import { useGlobalStateContext } from '../hooks/use-global-state';
-import { INumericPosition, IPosition } from '../types';
+import { IPosition, IMarker } from '../types';
 import { Color, colors } from '../helpers/colors';
 
 import "./map.css"
@@ -28,22 +28,22 @@ const markerIcons: Record<Color, Icon> = {
   "#CB8427": createIcon("orange"),
 }
 
-function MapMarker({position}: {position: IPosition}) {
+function MapMarker({marker}: {marker: IMarker}) {
   const {setGlobalState} = useGlobalStateContext()
-  const {numericPosition, color} = position
-  const {key, lat, lng} = numericPosition
+  const {position, color} = marker
+  const {key, latLng} = position
 
   const handleRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     e.stopPropagation()
     setGlobalState(draft => {
-      const index = draft.selectedPositions.findIndex(np => np.numericPosition.key === key)
-      draft.selectedPositions.splice(index, 1)
+      const index = draft.selectedMarkers.findIndex(marker => marker.position.key === key)
+      draft.selectedMarkers.splice(index, 1)
     })
   }
 
   return (
-    <Marker position={[lat, lng]} icon={markerIcons[color]}>
+    <Marker position={latLng} icon={markerIcons[color]}>
       <Popup>
         {key}
         <button onClick={handleRemove}>Remove</button>
@@ -55,43 +55,44 @@ function MapMarker({position}: {position: IPosition}) {
 function MapClickLayer() {
   const map = useMap()
   const {dataSet} = useDataSet()
-  const {globalState: {selectedPositions: selectedNumericPositions}, setGlobalState} = useGlobalStateContext()
+  const {globalState: {selectedMarkers}, setGlobalState} = useGlobalStateContext()
 
   useMapEvents({
     click: (e) => {
       const clickedAt: LatLngExpression = [e.latlng.lat, e.latlng.lng]
-      const result = dataSet.numericPositions.reduce<{numericPosition: INumericPosition|null, distance: number}>((acc, cur) => {
-        const distance = map.distance(clickedAt, [cur.lat, cur.lng])
+      const result = Object.keys(dataSet.positions).reduce<{position: IPosition|null, distance: number}>((acc, key) => {
+        const position = dataSet.positions[key]
+        const distance = map.distance(clickedAt, position.latLng)
         if (distance < acc.distance) {
           acc.distance = distance
-          acc.numericPosition = cur
+          acc.position = position
         }
         return acc
-      }, {numericPosition: null, distance: Infinity})
+      }, {position: null, distance: Infinity})
 
       // TODO: add max distance?
 
-      if (result.numericPosition) {
-        const numericPosition = result.numericPosition
+      const {position} = result
+      if (position) {
         setGlobalState(draft => {
-          const index = draft.selectedPositions.findIndex(np => np.numericPosition.key === numericPosition.key)
+          const index = draft.selectedMarkers.findIndex(marker => marker.position.key === position.key)
           if (index === -1) {
-            const replace = draft.selectedPositions.length >= colors.length
+            const replace = draft.selectedMarkers.length >= colors.length
             if (replace) {
-              draft.selectedPositions.shift()
+              draft.selectedMarkers.shift()
             }
             const availableColors = [...colors]
-            draft.selectedPositions.forEach(cur => availableColors.splice(availableColors.indexOf(cur.color), 1))
-            draft.selectedPositions.push({numericPosition, color: availableColors[0]})
+            draft.selectedMarkers.forEach(cur => availableColors.splice(availableColors.indexOf(cur.color), 1))
+            draft.selectedMarkers.push({position, color: availableColors[0]})
           }
         })
       }
-    },
+    }
   })
 
   return (
     <>
-      {selectedNumericPositions.map(np => <MapMarker key={np.numericPosition.key} position={np} />)}
+      {selectedMarkers.map(marker => <MapMarker key={marker.position.key} marker={marker} />)}
     </>
   )
 }

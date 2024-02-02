@@ -1,9 +1,10 @@
-import { Color } from "./helpers/colors"
+import type { LatLngExpression } from "leaflet"
+import type { Color } from "./helpers/colors"
 
-export type ILatLong = string // string in the form lat,long for use as map keys
+export type ILatLongKey = string // string in the form lat,long for use as map keys
 export type IYMDDate = string // string in the form YYYY-MM-DD for easy sorting
 
-export type ILatLongMap = Record<ILatLong,number>
+export type ILatLongMap = Record<ILatLongKey,number>
 export type IObservationMap = Record<IYMDDate,number[]>
 
 export interface IDataSetInfo {
@@ -18,19 +19,19 @@ export interface IRawDataSet {
   observations: IObservationMap
 }
 
-export interface INumericPosition {
-  key: string, lat: number, lng: number, index: number
-}
-
 export interface IPosition {
+  key: ILatLongKey, latLng: LatLngExpression, index: number
+}
+export type IPositionMap = Record<ILatLongKey,IPosition>
+
+export interface IMarker {
   color: Color
-  numericPosition: INumericPosition
+  position: IPosition
 }
 
 export interface IDataSet {
   info: IDataSetInfo
-  positions: ILatLongMap
-  numericPositions: INumericPosition[]
+  positions: IPositionMap
   observations: IObservationMap
   ymdDates: IYMDDate[]
   minValue: number
@@ -41,6 +42,6 @@ export interface IDataSet {
 export interface IGlobalState {
   dataSet?: IDataSet
   selectedYMDDate?: IYMDDate
-  selectedPositions: IPosition[]
+  selectedMarkers: IMarker[]
 }
 

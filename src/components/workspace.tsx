@@ -7,13 +7,13 @@ import { useGlobalStateContext } from '../hooks/use-global-state'
 import './workspace.css'
 
 function Workspace() {
-  const {globalState: {selectedPositions}} = useGlobalStateContext()
+  const {globalState: {selectedMarkers}} = useGlobalStateContext()
 
   const renderGraphs = () => {
-    if (selectedPositions.length === 0) {
+    if (selectedMarkers.length === 0) {
       return (
-        <div className="no-positions-note">
-          Click on the map to add locations to graph
+        <div className="no-markers-note">
+          Click on the map above to add markers.
         </div>
       )
     }

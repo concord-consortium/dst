@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useGlobalStateContext } from '../hooks/use-global-state'
-import { IDataSet, IDataSetInfo, INumericPosition, IRawDataSet } from '../types'
+import { IDataSet, IDataSetInfo, IPositionMap, IRawDataSet } from '../types'
+import { LatLngExpression } from 'leaflet'
 
 import './dataset-selector.css'
 
@@ -13,53 +14,57 @@ function DataSetSelector() {
   const { setGlobalState } = useGlobalStateContext()
   const [loading, setLoading] = useState(false)
 
-  const handleSelectDataSet = async (info: IDataSetInfo) => {
-    setLoading(true)
+  const handleSelectDataSet = (info: IDataSetInfo) => {
+    const selectDataSet = async () => {
+      setLoading(true)
 
-    try {
-      const url = `datasets/${info.filename}`
-      const result = await fetch(url)
-      const {positions, observations} = await result.json() as IRawDataSet
+      try {
+        const url = `datasets/${info.filename}`
+        const result = await fetch(url)
+        const {positions: rawPositions, observations} = await result.json() as IRawDataSet
 
-      const ymdDates = Object.keys(observations)
-      ymdDates.sort()
+        const ymdDates = Object.keys(observations)
+        ymdDates.sort()
 
-      const {minValue, maxValue} = Object.values(observations).reduce((acc, values) => {
-        return values.reduce((acc2, value) => {
-          if (value !== null) {
-            acc2.minValue = Math.min(acc2.minValue, value)
-            acc2.maxValue = Math.max(acc2.maxValue, value)
-          }
-          return acc2
-        }, acc)
-      }, {minValue: Infinity, maxValue: -Infinity})
+        const {minValue, maxValue} = Object.values(observations).reduce((acc, values) => {
+          return values.reduce((acc2, value) => {
+            if (value !== null) {
+              acc2.minValue = Math.min(acc2.minValue, value)
+              acc2.maxValue = Math.max(acc2.maxValue, value)
+            }
+            return acc2
+          }, acc)
+        }, {minValue: Infinity, maxValue: -Infinity})
 
-      // for easy lookup of lat/long
-      const numericPositions: INumericPosition[] = []
-      for (const [latLng, index] of Object.entries(positions)) {
-        const [lat, lng] = latLng.split(",")
-        numericPositions.push({key: latLng, lat: Number(lat), lng: Number(lng), index})
+        const positions: IPositionMap = {}
+        for (const [rawKey, index] of Object.entries(rawPositions)) {
+          const [lat, lng] = rawKey.split(",")
+          const key = [lat, lng].join(", ") // looks better when displayed with space after comma
+          const latLng: LatLngExpression = [Number(lat), Number(lng)]
+          positions[key] = {key, latLng, index}
+        }
+
+        const dataSet: IDataSet = {
+          info,
+          positions,
+          observations,
+          ymdDates,
+          minValue,
+          maxValue,
+          range: maxValue - minValue
+        }
+
+        setGlobalState(draft => {
+          draft.dataSet = dataSet
+        })
+      } catch (e) {
+        alert(e)
       }
 
-      const dataSet: IDataSet = {
-        info,
-        positions,
-        numericPositions,
-        observations,
-        ymdDates,
-        minValue,
-        maxValue,
-        range: maxValue - minValue
-      }
-
-      setGlobalState(draft => {
-        draft.dataSet = dataSet
-      })
-    } catch (e) {
-      alert(e)
+      setLoading(false)
     }
 
-    setLoading(false)
+    selectDataSet().catch(console.error)
   }
 
   const renderButtons = () => {
