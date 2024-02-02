@@ -1,3 +1,5 @@
+import { Color } from "./helpers/colors"
+
 export type ILatLong = string // string in the form lat,long for use as map keys
 export type IYMDDate = string // string in the form YYYY-MM-DD for easy sorting
 
@@ -20,6 +22,11 @@ export interface INumericPosition {
   key: string, lat: number, lng: number, index: number
 }
 
+export interface IPosition {
+  color: Color
+  numericPosition: INumericPosition
+}
+
 export interface IDataSet {
   info: IDataSetInfo
   positions: ILatLongMap
@@ -34,6 +41,6 @@ export interface IDataSet {
 export interface IGlobalState {
   dataSet?: IDataSet
   selectedYMDDate?: IYMDDate
-  selectedNumericPositions: INumericPosition[]
+  selectedPositions: IPosition[]
 }
 

@@ -21,15 +21,26 @@
 
 .workspace > .graph-container {
   display: flex;
-  flex-grow: 1;
+  gap: 2rem;
+  height: 40vh;
+  padding: 0 1rem 1rem 1rem;
 }
 /* xyplot */
 .workspace > .graph-container > div:nth-child(1) {
-  flex-grow: 1;
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
 }
 /* colorbar plot */
 .workspace > .graph-container > div:nth-child(2) {
-  width: 25vw;
+  flex: 1;
+}
+.workspace > .graph-container > .no-positions-note {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center !important;
+  align-items: center;
 }
 
 .workspace > .debug-container {
