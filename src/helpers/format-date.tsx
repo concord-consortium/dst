@@ -9,3 +9,9 @@ export const formatDate = (date: Date): string => {
 
   return `${month} ${year}`;
 };
+
+export const abbrDate = (date: Date): string => {
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear().toString().slice(2, 4);
+  return `${month}/${year}`;
+}
