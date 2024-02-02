@@ -12,6 +12,7 @@ export interface IDataSetInfo {
   filename: string
   description: string
   observationName: string
+  gridSize: number
 }
 
 export interface IRawDataSet {

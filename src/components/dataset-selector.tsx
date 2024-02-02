@@ -6,8 +6,8 @@ import { LatLngExpression } from 'leaflet'
 import './dataset-selector.css'
 
 const availableDataSets: IDataSetInfo[] = [
-  // {name: "NOAA Weather", filename: "noaa-weather.json", description: "", observationName: "TDB"},
-  {name: "NEO Precipitation", filename: "neo-precip.json", description: "", observationName: "Precipitation"},
+  {name: "NOAA Weather", filename: "noaa-weather.json", description: "", observationName: "Precipitation", gridSize: 0.25},
+  {name: "NEO Precipitation", filename: "neo-precip.json", description: "", observationName: "Precipitation", gridSize: 0.5},
 ]
 
 function DataSetSelector() {
