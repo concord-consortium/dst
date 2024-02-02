@@ -28,7 +28,7 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
+const options = {
   responsive: true,
   plugins: {
     legend: {
@@ -43,16 +43,17 @@ export const options = {
 
 function XYPlot() {
   const { dataSet: { info, ymdDates, observations } } = useDataSet()
-  const {globalState: {selectedPositions: selectedNumericPositions}} = useGlobalStateContext()
+  const {globalState: {selectedMarkers}} = useGlobalStateContext()
   const labels = ymdDates.map(ymdDate => formatDate(new Date(ymdDate)))
 
-  const datasets: ChartDataset<"line", number[]>[] = selectedNumericPositions.map(np => {
-    const data = Object.keys(observations).map(ymd => observations[ymd][np.numericPosition.index])
+  const datasets: ChartDataset<"line", number[]>[] = selectedMarkers.map(marker => {
+    const {position, color} = marker
+    const data = Object.keys(observations).map(key => observations[key][position.index])
     return {
-      label: np.numericPosition.key,
+      label: position.key,
       data,
-      borderColor: np.color,
-      backgroundColor: np.color,
+      borderColor: color,
+      backgroundColor: color,
     }
   })
 

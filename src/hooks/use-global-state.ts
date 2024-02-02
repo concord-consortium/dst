@@ -4,7 +4,7 @@ import { IGlobalState } from "../types";
 
 export const getDefaultState = (): IGlobalState => {
   return {
-    selectedPositions: []
+    selectedMarkers: []
   }
 }
 
