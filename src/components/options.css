@@ -1,0 +1,18 @@
+.options {
+  padding: 0.5rem;
+}
+.options legend {
+  display: block;
+  font-weight: bold;
+}
+.options strong {
+  display: block;
+  margin-top: 1rem;
+}
+.options > div {
+  display: flex;
+  flex-direction: column;
+}
+.options input {
+  padding: 0.25rem;
+}

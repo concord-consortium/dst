@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useDataSet } from "../hooks/use-dataset"
 import { useGlobalStateContext } from "../hooks/use-global-state"
 import { formatDate } from "../helpers/format-date"
+import { useOptionsContext } from "../hooks/use-options"
 
 import "./time-slider.css"
 
@@ -11,6 +12,8 @@ function TimeSlider() {
   const [value, setValue] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const lastDateIndex = ymdDates.length - 1
+  const {options: {animationDuration}} = useOptionsContext()
+  const animationIntervalRef = useRef(0)
 
   useEffect(() => {
     setGlobalState(draft => {
@@ -20,7 +23,8 @@ function TimeSlider() {
 
   useEffect(() => {
     if (isPlaying) {
-      const interval = setInterval(() => {
+      clearInterval(animationIntervalRef.current)
+      animationIntervalRef.current = setInterval(() => {
         setValue(prevValue => {
           const newValue = prevValue + 1
           if (newValue > lastDateIndex) {
@@ -29,10 +33,10 @@ function TimeSlider() {
           }
           return newValue
         })
-      }, 500)
-      return () => clearInterval(interval)
+      }, animationDuration)
+      return () => clearInterval(animationIntervalRef.current)
     }
-  }, [isPlaying, lastDateIndex])
+  }, [isPlaying, lastDateIndex, animationDuration])
 
   const displayDates = useMemo(() => {
     return ymdDates.map(ymdDate => formatDate(new Date(ymdDate)))
