@@ -5,6 +5,8 @@
   gap: 1rem;
   align-items: center;
   justify-content: center;
+  border: 1px solid #777;
+  background-color: #eee;
 }
 .time-slider > div {
   cursor: pointer;
