@@ -6,7 +6,8 @@ import { useDataSet } from '../hooks/use-dataset';
 import { useGlobalStateContext } from '../hooks/use-global-state';
 import { IPosition, IMarker } from '../types';
 import { Color, colors } from '../helpers/colors';
-import {createWebGLHeatmap} from "./webgl-heatmap.js"
+import { createWebGLHeatmap } from "./webgl-heatmap.js"
+import { useOptionsContext } from '../hooks/use-options.js';
 
 import 'leaflet/dist/leaflet.css';
 import "./map.css"
@@ -17,6 +18,7 @@ const usCenter: LatLngExpression = [39.833333, -98.585522]
 
 const HeatMap = () => {
   const map = useMap()
+  const {options} = useOptionsContext()
   const {dataSet} = useDataSet()
   const {globalState: {selectedYMDDate}} = useGlobalStateContext()
   const webGLHeatmapRef = useRef<any>(null)
@@ -27,6 +29,10 @@ const HeatMap = () => {
     opacity: 0.75
   }
   const canvasRef = useRef<HTMLCanvasElement|null>(null)
+
+  useEffect(() => {
+    webGLHeatmapRef.current = undefined
+  }, [options])
 
   useEffect(() => {
     const updateCanvas = () => {
@@ -56,7 +62,7 @@ const HeatMap = () => {
         webGLHeatmapRef.current = createWebGLHeatmap({
           canvas: canvasRef.current,
           gradientTexture: scaleSrc,
-          alphaRange: [0, 0.05]
+          alphaRange: [options.alphaMin, options.alphaMax]
         })
       }
       webGLHeatmapRef.current.adjustSize()
@@ -68,7 +74,7 @@ const HeatMap = () => {
 
       // calculate the size of the dots by finding the distance between the grid points
       const p1 = map.latLngToContainerPoint([0, 0])
-      const p2 = map.latLngToContainerPoint([dataSet.info.gridSize, dataSet.info.gridSize])
+      const p2 = map.latLngToContainerPoint([options.gridSize, options.gridSize])
       const size = (p2.x - p1.x) * 6 // 6 found by experimenting to see what looks good
 
       const observations = dataSet.observations[selectedYMDDate]
@@ -99,7 +105,7 @@ const HeatMap = () => {
       map.off("move", updateCanvas)
       map.off("zoom", updateCanvas)
     }
-  }, [map, dataSet, selectedYMDDate])
+  }, [map, dataSet, selectedYMDDate, options])
 
   return (
     <Pane name="heatmapPane">

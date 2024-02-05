@@ -2,6 +2,7 @@ import ColorbarPlot from './colorbar-plot'
 import Map from "./map"
 import TimeSlider from './time-slider'
 import XYPlot from './xy-plot'
+import Options from './options'
 import { useGlobalStateContext } from '../hooks/use-global-state'
 
 import './workspace.css'
@@ -30,6 +31,7 @@ function Workspace() {
     <div className='workspace'>
       <div className='map-container'>
         <Map />
+        <Options />
       </div>
       <div className='timeslider-container'>
         <TimeSlider />

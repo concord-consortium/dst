@@ -43,9 +43,3 @@
   align-items: center;
 }
 
-.workspace > .debug-container {
-  padding: 0.5rem;
-}
-.workspace > .debug-container > span {
-  padding: 0 0.5rem;
-}
