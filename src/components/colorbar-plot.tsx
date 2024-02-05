@@ -8,7 +8,7 @@ import "./colorbar-plot.css";
 const ColorbarPlot = () => {
   const { dataSet } = useDataSet();
   const {globalState: {selectedMarkers, selectedYMDDate}} = useGlobalStateContext()
-  const { minValue, maxValue, observations } = dataSet;
+  const { minValue, maxValue, observations, ymdDates } = dataSet;
 
   const renderTable = () => {
     return selectedMarkers.map((marker) => {
@@ -18,18 +18,18 @@ const ColorbarPlot = () => {
           <th colSpan={2}>
             {marker.position.key}
           </th>
-          {[...Object.keys(observations)].reverse().map((key) => {
-            const value = observations[key][position.index];
+          {[...ymdDates].reverse().map((date) => {
+            const value = observations[date][position.index];
             const color = getColorForValue(value, minValue, maxValue);
             return (
               <tr>
                 <td
                   style={{
                     width: "40px",
-                    fontWeight: key === selectedYMDDate ? "bold" : "normal",
-                    backgroundColor: key === selectedYMDDate ? "lightgray" : "white"
+                    fontWeight: date === selectedYMDDate ? "bold" : "normal",
+                    backgroundColor: date === selectedYMDDate ? "lightgray" : "white"
                   }}
-                  >{abbrDate(new Date(key))}</td>
+                  >{abbrDate(new Date(date))}</td>
                 <td
                   title={`${value}`}
                   style={{backgroundColor: color, width: "60px"}}
