@@ -21,3 +21,8 @@
   cursor: pointer;
   min-width: 300px;
 }
+.time-slider > .play-button {
+  text-align: center;
+  width: 75px;
+  padding: .6em;
+}

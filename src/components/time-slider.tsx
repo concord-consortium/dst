@@ -55,7 +55,7 @@ function TimeSlider() {
 
   return (
     <div className="time-slider">
-      <button onClick={togglePlayPause}>{isPlaying ? "Pause" : "Play"}</button>
+      <button className="play-button" onClick={togglePlayPause}>{isPlaying ? "Pause" : "Play"}</button>
       <div onClick={() => setValue(0)}>{displayDates[0]}</div>
       <div>
         <input
