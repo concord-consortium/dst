@@ -17,6 +17,13 @@ header {
   display: flex;
   justify-content: space-between;
 }
+header a {
+  text-decoration: none;
+  color: white;
+}
+header a:hover {
+  color: white;
+}
 /* logo */
 header > div:nth-child(1) {
   font-weight: bold;

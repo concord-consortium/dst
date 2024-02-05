@@ -14,7 +14,7 @@ const ColorbarPlot = () => {
     return selectedMarkers.map((marker) => {
       const { position } = marker;
       return (
-        <table className="colorbar-table">
+        <table key={marker.position.index} className="colorbar-table">
           <th colSpan={2}>
             {marker.position.key}
           </th>
@@ -22,7 +22,7 @@ const ColorbarPlot = () => {
             const value = observations[date][position.index];
             const color = getColorForValue(value, minValue, maxValue);
             return (
-              <tr>
+              <tr key={date}>
                 <td
                   style={{
                     width: "40px",

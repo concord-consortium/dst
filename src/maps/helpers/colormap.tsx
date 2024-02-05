@@ -21,8 +21,8 @@ function rgbToHex(color: Color): string {
 
 export function getColorForValue(value: number, minValue: number, maxValue: number): string {
   const range = (maxValue - minValue) / (colors.length - 1);
-  let index = Math.min(Math.floor((value - minValue) / range), colors.length - 2);
-  let factor = (value - minValue) % range / range;
+  const index = Math.min(Math.floor((value - minValue) / range), colors.length - 2);
+  const factor = (value - minValue) % range / range;
 
   const color = interpolateColor(colors[index], colors[index + 1], factor);
   return rgbToHex(color);

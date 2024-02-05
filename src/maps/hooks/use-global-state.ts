@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { Updater, useImmer } from "use-immer";
-import { IGlobalState } from "../types";
+import { IGlobalState } from "../types"
 
 export const getDefaultState = (): IGlobalState => {
   return {
