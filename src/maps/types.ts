@@ -13,6 +13,8 @@ export interface IDataSetInfo {
   description: string
   observationName: string
   gridSize: number
+  centerLatLng: LatLngExpression
+  zoomLevel: number
 }
 
 export interface IRawDataSet {
