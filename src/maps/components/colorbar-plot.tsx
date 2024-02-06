@@ -15,9 +15,14 @@ const ColorbarPlot = () => {
       const { position } = marker;
       return (
         <table key={marker.position.index} className="colorbar-table">
-          <th colSpan={2}>
-            {marker.position.key}
-          </th>
+          <thead>
+            <tr>
+              <th colSpan={2}>
+                {marker.position.key}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
           {[...ymdDates].reverse().map((date) => {
             const value = observations[date][position.index];
             const color = getColorForValue(value, minValue, maxValue);
@@ -37,6 +42,7 @@ const ColorbarPlot = () => {
               </tr>
             )
           })}
+          </tbody>
         </table>
       )
     });
