@@ -21,7 +21,7 @@ function DataSetSelector() {
       try {
         const url = `datasets/${info.filename}`
         const result = await fetch(url)
-        const {positions: rawPositions, observations} = await result.json() as IRawDataSet
+        const {positions: rawPositions, observations, placenames} = await result.json() as IRawDataSet
 
         const ymdDates = Object.keys(observations)
         ymdDates.sort()
@@ -37,9 +37,8 @@ function DataSetSelector() {
         }, {minValue: Infinity, maxValue: -Infinity})
 
         const positions: IPositionMap = {}
-        for (const [rawKey, index] of Object.entries(rawPositions)) {
-          const [lat, lng] = rawKey.split(",")
-          const key = [lat, lng].join(", ") // looks better when displayed with space after comma
+        for (const [key, index] of Object.entries(rawPositions)) {
+          const [lat, lng] = key.split(",")
           const latLng: LatLngExpression = [Number(lat), Number(lng)]
           positions[key] = {key, latLng, index}
         }
@@ -48,6 +47,7 @@ function DataSetSelector() {
           info,
           positions,
           observations,
+          placenames,
           ymdDates,
           minValue,
           maxValue,
