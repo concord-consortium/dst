@@ -18,7 +18,7 @@ function App() {
         draft.gridSize = dataSet.info.gridSize
       })
     }
-  }, [dataSet, optionsValue])
+  }, [dataSet])
 
   const handleClearDataSet = () => setGlobalState(getDefaultState())
 
