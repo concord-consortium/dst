@@ -27,7 +27,7 @@ function App() {
       <OptionsContext.Provider value={optionsValue}>
         <div className='app'>
           <header>
-            <div><a href="..">DST: SpaceTime</a> Maps</div>
+            <div><a href="index.html">DST: SpaceTime</a> Maps</div>
             {dataSet && <div role='button' onClick={handleClearDataSet} title="Click here to select a different dataset">{dataSet.info.name}</div>}
           </header>
           {!dataSet && <DataSetSelector />}
