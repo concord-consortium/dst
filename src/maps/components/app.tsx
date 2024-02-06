@@ -18,7 +18,7 @@ function App() {
         draft.gridSize = dataSet.info.gridSize
       })
     }
-  }, [dataSet])
+  }, [dataSet, optionsValue])
 
   const handleClearDataSet = () => setGlobalState(getDefaultState())
 
@@ -27,7 +27,7 @@ function App() {
       <OptionsContext.Provider value={optionsValue}>
         <div className='app'>
           <header>
-            <div>DST: SpaceTime</div>
+            <div><a href="..">DST: SpaceTime</a> Maps</div>
             {dataSet && <div role='button' onClick={handleClearDataSet} title="Click here to select a different dataset">{dataSet.info.name}</div>}
           </header>
           {!dataSet && <DataSetSelector />}

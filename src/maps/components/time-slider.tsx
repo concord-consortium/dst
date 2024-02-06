@@ -8,7 +8,7 @@ import "./time-slider.css"
 
 function TimeSlider() {
   const { dataSet: { ymdDates } } = useDataSet()
-  const { setGlobalState }  = useGlobalStateContext()
+  const { setGlobalState } = useGlobalStateContext()
   const [value, setValue] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const lastDateIndex = ymdDates.length - 1
@@ -24,7 +24,7 @@ function TimeSlider() {
   useEffect(() => {
     if (isPlaying) {
       clearInterval(animationIntervalRef.current)
-      animationIntervalRef.current = setInterval(() => {
+      animationIntervalRef.current = window.setInterval(() => {
         setValue(prevValue => {
           const newValue = prevValue + 1
           if (newValue > lastDateIndex) {
