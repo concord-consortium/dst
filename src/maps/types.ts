@@ -6,6 +6,7 @@ export type IYMDDate = string // string in the form YYYY-MM-DD for easy sorting
 
 export type ILatLongMap = Record<ILatLongKey,number>
 export type IObservationMap = Record<IYMDDate,number[]>
+export type IPlacenameMap = Record<ILatLongKey,string|undefined>
 
 export interface IDataSetInfo {
   name: string
@@ -20,6 +21,7 @@ export interface IDataSetInfo {
 export interface IRawDataSet {
   positions: ILatLongMap
   observations: IObservationMap
+  placenames: IPlacenameMap
 }
 
 export interface IPosition {
@@ -36,6 +38,7 @@ export interface IDataSet {
   info: IDataSetInfo
   positions: IPositionMap
   observations: IObservationMap
+  placenames: IPlacenameMap
   ymdDates: IYMDDate[]
   minValue: number
   maxValue: number

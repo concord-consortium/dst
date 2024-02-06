@@ -17,6 +17,7 @@ import { formatDate } from '../helpers/format-date';
 import { useDataSet } from '../hooks/use-dataset';
 import { useGlobalStateContext } from '../hooks/use-global-state';
 import { Line } from 'react-chartjs-2'
+import { placename } from '../helpers/placename';
 
 import "./xy-plot.css"
 
@@ -45,7 +46,7 @@ const options = {
 };
 
 function XYPlot() {
-  const { dataSet: { ymdDates, observations } } = useDataSet()
+  const { dataSet: { info, ymdDates, observations, placenames } } = useDataSet()
   const {globalState: {selectedMarkers, selectedYMDDate}} = useGlobalStateContext()
   const labels = ymdDates.map(ymdDate => formatDate(new Date(ymdDate)))
   const [chartOptions, setChartOptions] = useState(options)
@@ -64,7 +65,7 @@ function XYPlot() {
         ...options.plugins,
         title: {
           display: true,
-          text: `Observations for ${formatDate(new Date(selectedYMDDate))}`
+          text: `${info.observationName} from ${labels[0]} to ${labels[labels.length - 1]}`
         },
         annotation: {
           annotations: {
@@ -84,8 +85,9 @@ function XYPlot() {
   const datasets: ChartDataset<"line", number[]>[] = selectedMarkers.map(marker => {
     const {position, color} = marker
     const data = Object.keys(observations).map(key => observations[key][position.index])
+    const label = placename(position, placenames)
     return {
-      label: position.key,
+      label,
       data,
       borderColor: color,
       backgroundColor: color,

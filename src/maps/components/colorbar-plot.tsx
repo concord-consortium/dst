@@ -1,5 +1,6 @@
 import { getColorForValue } from "../helpers/colormap";
 import { abbrDate } from "../helpers/format-date";
+import { placename } from "../helpers/placename";
 import { useDataSet } from "../hooks/use-dataset";
 import { useGlobalStateContext } from "../hooks/use-global-state";
 
@@ -8,17 +9,18 @@ import "./colorbar-plot.css";
 const ColorbarPlot = () => {
   const { dataSet } = useDataSet();
   const {globalState: {selectedMarkers, selectedYMDDate}} = useGlobalStateContext()
-  const { minValue, maxValue, observations, ymdDates } = dataSet;
+  const { minValue, maxValue, observations, ymdDates, placenames } = dataSet;
 
   const renderTable = () => {
     return selectedMarkers.map((marker) => {
       const { position } = marker;
+      const label = placename(position, placenames)
       return (
         <table key={marker.position.index} className="colorbar-table">
           <thead>
             <tr>
               <th colSpan={2}>
-                {marker.position.key}
+                {label}
               </th>
             </tr>
           </thead>

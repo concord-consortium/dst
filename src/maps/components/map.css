@@ -1,4 +1,6 @@
-.leaflet-popup-content > button {
-  display: block;
-  margin-top: 0.5rem;
+.leaflet-popup-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
 }
