@@ -39,8 +39,7 @@ const options = {
       position: 'top' as const,
     },
     title: {
-      display: true,
-      text: 'Chart.js Line Chart',
+      display: false,
     },
   },
 };
@@ -64,7 +63,7 @@ function XYPlot() {
       plugins: {
         ...options.plugins,
         title: {
-          display: true,
+          display: false,
           text: `${info.observationName} from ${labels[0]} to ${labels[labels.length - 1]}`
         },
         annotation: {
@@ -84,7 +83,7 @@ function XYPlot() {
 
   const datasets: ChartDataset<"line", number[]>[] = selectedMarkers.map(marker => {
     const {position, color} = marker
-    const data = Object.keys(observations).map(key => observations[key][position.index])
+    const data = Object.keys(observations).map(key => observations[key][position.index] ?? 0)
     const label = placename(position, placenames)
     return {
       label,
