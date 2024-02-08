@@ -29,8 +29,8 @@ function DataSetSelector() {
         const {minValue, maxValue} = Object.values(observations).reduce((acc, values) => {
           return values.reduce((acc2, value) => {
             if (value !== null) {
-              acc2.minValue = Math.min(acc2.minValue, value)
-              acc2.maxValue = Math.max(acc2.maxValue, value)
+              acc2.minValue = Math.min(acc2.minValue, value ?? 0)
+              acc2.maxValue = Math.max(acc2.maxValue, value ?? 0)
             }
             return acc2
           }, acc)
