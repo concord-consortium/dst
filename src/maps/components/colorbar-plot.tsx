@@ -86,11 +86,12 @@ const ColorbarPlot = () => {
     },
   };
 
+  const binLength = 20;
   const datasets: Array<IDataset> = [];
   const bins: Array<number> = [];
-  const binSize = range / 20;
-  for (let i = 0; i < 20; i++) {
-    if (i === 19) {
+  const binSize = range / binLength;
+  for (let i = 0; i < binLength; i++) {
+    if (i === binLength - 1) {
       bins.push(maxValue)
     } else {
       bins.push(minValue + (i * binSize));

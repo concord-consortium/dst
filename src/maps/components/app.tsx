@@ -35,7 +35,7 @@ function App() {
         <div className='app'>
           <header>
             <div><a href="index.html">DST: SpaceTime</a> Maps</div>
-            <div>{title && title}</div>
+            {title && <div>{title}</div>}
             {dataSet && <div role='button' onClick={handleClearDataSet} title="Click here to select a different dataset">{dataSet.info.name}</div>}
           </header>
           {!dataSet && <DataSetSelector />}
