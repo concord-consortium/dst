@@ -1,22 +1,4 @@
 .colorbar-container {
-  display: flex;
-  gap: 10px;
-  overflow: auto;
+  height: 100%;
   padding: 5px;
-}
-
-.colorbar-table {
-  font-size: 12px;
-  border-collapse: collapse;
-  border: 1px solid black;
-}
-
-th {
-  margin: 0 auto;
-  border: 1px solid black;
-}
-
-td {
-  text-align: center;
-  border: 1px solid black;
 }
