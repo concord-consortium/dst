@@ -16,6 +16,7 @@ export interface IDataSetInfo {
   gridSize: number
   centerLatLng: LatLngExpression
   zoomLevel: number
+  units: string
 }
 
 export interface IRawDataSet {
@@ -49,5 +50,6 @@ export interface IGlobalState {
   dataSet?: IDataSet
   selectedYMDDate?: IYMDDate
   selectedMarkers: IMarker[]
+  showOptions: boolean
 }
 

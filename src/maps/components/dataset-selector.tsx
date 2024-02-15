@@ -6,8 +6,8 @@ import { LatLngExpression } from 'leaflet'
 import './dataset-selector.css'
 
 const availableDataSets: IDataSetInfo[] = [
-  {name: "NOAA Weather", filename: "noaa-weather.json", description: "", observationName: "Precipitation", gridSize: 0.25, centerLatLng: [42.64649054610893, -73.3387699585061], zoomLevel: 6},
-  {name: "NEO Precipitation", filename: "neo-precip.json", description: "", observationName: "Precipitation", gridSize: 0.5, centerLatLng: [39.833333, -98.585522], zoomLevel: 4},
+  {name: "NOAA Weather", filename: "noaa-weather.json", description: "NOAA Precipitation for New England: November 2013 - October 2023", observationName: "Precipitation", gridSize: 0.25, centerLatLng: [42.64649054610893, -73.3387699585061], zoomLevel: 6, units: "in"},
+  {name: "NEO Precipitation", filename: "neo-precip.json", description: "NEO Monthly Total Precipitation for US: June 2022 - May 2023", observationName: "Precipitation", gridSize: 0.5, centerLatLng: [39.833333, -98.585522], zoomLevel: 4, units: "mm"},
 ]
 
 function DataSetSelector() {
@@ -71,7 +71,9 @@ function DataSetSelector() {
     return (
       <div>
         {availableDataSets.map(info => (
-          <button key={info.filename} disabled={loading} onClick={() => handleSelectDataSet(info)}>{info.name}</button>
+          <button key={info.filename} disabled={loading} onClick={() => handleSelectDataSet(info)}>
+            {info.description}
+          </button>
         ))}
       </div>
     )

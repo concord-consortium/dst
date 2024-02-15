@@ -3,6 +3,7 @@ import Map from "./map"
 import TimeSlider from './time-slider'
 import XYPlot from './xy-plot'
 import Options from './options'
+import MapLegend from './map-legend'
 import { useGlobalStateContext } from '../hooks/use-global-state'
 
 import './workspace.css'
@@ -30,6 +31,7 @@ function Workspace() {
   return (
     <div className='workspace'>
       <div className='map-container'>
+        <MapLegend />
         <Map />
         <Options />
       </div>

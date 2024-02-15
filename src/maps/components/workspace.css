@@ -11,7 +11,7 @@
   flex-grow: 1;
 }
 /* leaflet map */
-.workspace > .map-container > div:nth-child(1) {
+.workspace > .map-container > div:nth-child(2) {
   flex-grow: 1;
 }
 

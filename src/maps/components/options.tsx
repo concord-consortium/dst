@@ -1,18 +1,11 @@
+import { useGlobalStateContext } from '../hooks/use-global-state';
 import { useOptionsContext } from '../hooks/use-options'
 import './options.css'
 
-const params = new URLSearchParams(window.location.search)
-const showDebugOptions = params.get("showOptions") === "true"
-
 function Options() {
-  const {options, setOptions} = useOptionsContext()
+  const {options, setOptions} = useOptionsContext();
+  const {globalState} = useGlobalStateContext();
 
-  const handleSetAlphaMin = (e: React.ChangeEvent<HTMLInputElement>) => setOptions(draft => {
-    draft.alphaMin = Number(e.target.value)
-  })
-  const handleSetAlphaMax = (e: React.ChangeEvent<HTMLInputElement>) => setOptions(draft => {
-    draft.alphaMax = Number(e.target.value)
-  })
   const handleSetGridSize = (e: React.ChangeEvent<HTMLInputElement>) => setOptions(draft => {
     draft.gridSize = Number(e.target.value)
   })
@@ -20,7 +13,7 @@ function Options() {
     draft.animationDuration = Number(e.target.value)
   })
 
-  if (!showDebugOptions) {
+  if (!globalState.showOptions) {
     return null
   }
 
@@ -28,12 +21,6 @@ function Options() {
     <div className='options'>
       <legend>Map Options</legend>
       <div>
-        <strong>Alpha Min</strong>
-        <input type="number" min="0" max="1" step="0.01" value={options.alphaMin} onChange={handleSetAlphaMin} />
-
-        <strong>Alpha Max</strong>
-        <input type="number" min="0" max="1" step="0.01" value={options.alphaMax} onChange={handleSetAlphaMax} />
-
         <strong>Grid Size</strong>
         <input type="number" min="0" max="1" step="0.01" value={options.gridSize} onChange={handleSetGridSize} />
 

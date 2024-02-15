@@ -7,6 +7,7 @@
   justify-content: center;
   border: 1px solid #777;
   background-color: #eee;
+  color: #000;
 }
 .time-slider > div {
   cursor: pointer;
@@ -27,4 +28,6 @@
   text-align: center;
   width: 75px;
   padding: .6em;
+  color: black;
+  background-color: #d3d3d3;
 }
