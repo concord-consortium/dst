@@ -38,6 +38,9 @@ const ColorbarPlot = () => {
   yLabels.push(nextMonthDate);
 
   const options = {
+    animation: {
+      duration: 0,
+    },
     plugins: {
       title: {
         display: false,
