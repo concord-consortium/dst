@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { GlobalStateContext, getDefaultState, useGlobalStateContextValue } from '../hooks/use-global-state'
 import Workspace from './workspace'
 import DataSetSelector from './dataset-selector'
