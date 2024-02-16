@@ -116,18 +116,10 @@ const HeatMap = () => {
 const createIcon = (colorName: string) => {
   return icon({
     iconUrl: `assets/marker-icon-${colorName}.png`,
-    iconSize: [25, 41],
+    iconSize: [21, 31],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
   })
-}
-
-const markerIcons: Record<Color, Icon> = {
-  "#2A81CB": createIcon("blue"),
-  "#FFD326": createIcon("gold"),
-  "#CB2B3E": createIcon("red"),
-  "#2AAD27": createIcon("green"),
-  "#CB8427": createIcon("orange"),
 }
 
 function MapMarker({marker}: {marker: IMarker}) {
@@ -136,6 +128,7 @@ function MapMarker({marker}: {marker: IMarker}) {
   const {position, color} = marker
   const {key, latLng} = position
   const label = placename(position, placenames)
+  const icon = createIcon(color);
 
   const handleRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
@@ -147,7 +140,7 @@ function MapMarker({marker}: {marker: IMarker}) {
   }
 
   return (
-    <Marker position={latLng} icon={markerIcons[color]}>
+    <Marker position={latLng} icon={icon}>
       <Popup>
         <div>{label}</div>
         <div><button onClick={handleRemove}>Remove Pin</button></div>

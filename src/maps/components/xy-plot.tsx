@@ -100,7 +100,7 @@ function XYPlot() {
       label,
       data,
       borderColor: hexToRGBA(color, .5),
-      backgroundColor: color,
+      backgroundColor: `#${color}`,
       borderWidth: 2,
       pointRadius: 2
     }
