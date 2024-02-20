@@ -23,10 +23,6 @@ function Options() {
       <div>
         <strong>Grid Size</strong>
         <input type="number" min="0" max="1" step="0.01" value={options.gridSize} onChange={handleSetGridSize} />
-
-        <div style={{width: 200, margin: "1rem 0"}}>
-          NOTE: the grid size can be set per dataset.
-        </div>
       </div>
 
       <legend>Time Slider Options</legend>
