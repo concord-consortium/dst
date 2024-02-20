@@ -1,0 +1,40 @@
+.map-legend {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 112px;
+  left: 10px;
+  z-index: 500;
+  border-radius: 3px;
+  border: 1px solid #777;
+  height: 220px;
+}
+
+.legend-title {
+  background-color: #d3d3d3;
+  text-align: center;
+  width: 100%;
+  font-size: 14px;
+  border-bottom: 1px solid #777;
+  font-weight: bold;
+  height: 20px;
+}
+
+.table-container {
+  padding: 2px;
+  height: 200px;
+}
+
+table {
+  font-size: 12px;
+  height: 100%;
+  border-spacing: 5px 5px;
+  line-height: 1;
+}
+
+td.color {
+  width: 20px;
+}

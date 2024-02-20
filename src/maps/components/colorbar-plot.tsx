@@ -6,9 +6,9 @@ import { Bar } from 'react-chartjs-2';
 import { placename } from "../helpers/placename";
 import { useDataSet } from "../hooks/use-dataset";
 import { useGlobalStateContext } from "../hooks/use-global-state";
-import { getColorForValue } from "../helpers/colormap";
 import { formatDate } from '../helpers/format-date';
-
+import { dynamicRound } from '../helpers/dynamic-round';
+import { useColorBins } from '../hooks/use-color-bins';
 
 import "./colorbar-plot.css";
 
@@ -25,8 +25,9 @@ interface IDataset {
 
 const ColorbarPlot = () => {
   const { dataSet } = useDataSet();
+  const { bins } = useColorBins();
   const {globalState: {selectedMarkers, selectedYMDDate}} = useGlobalStateContext()
-  const { observations, ymdDates, placenames, minValue, maxValue, range } = dataSet;
+  const { observations, ymdDates, placenames, info } = dataSet;
   const labels = selectedMarkers.map((marker) => placename(marker.position, placenames))
 
   const yLabels = ymdDates.map((ymd) => formatDate(new Date(ymd)));
@@ -37,6 +38,9 @@ const ColorbarPlot = () => {
   yLabels.push(nextMonthDate);
 
   const options = {
+    animation: {
+      duration: 0,
+    },
     plugins: {
       title: {
         display: false,
@@ -54,11 +58,11 @@ const ColorbarPlot = () => {
           label: function(context: any) {
             const ymdDate = ymdDates[context.parsed.y - 1];
             const location = selectedMarkers[context.parsed.x].position;
-            const observation = observations[ymdDate][location.index];
-            return `${placename(location, placenames)}: ${observation}`;
+            const value = observations[ymdDate][location.index];
+            const observation = value ? value : 0
+            return `${placename(location, placenames)}: ${dynamicRound(observation)} ${info.units}`;
           }
         }
-
       },
       annotation: {
         annotations: {
@@ -86,28 +90,17 @@ const ColorbarPlot = () => {
     },
   };
 
-  const binLength = 20;
-  const datasets: Array<IDataset> = [];
-  const bins: Array<number> = [];
-  const binSize = range / binLength;
-  for (let i = 0; i < binLength; i++) {
-    if (i === binLength - 1) {
-      bins.push(maxValue)
-    } else {
-      bins.push(minValue + (i * binSize));
-    }
-  }
+  const datasets: IDataset[] = [];
 
   bins.forEach((bin, index) => {
     const isFirstValue = index === 0;
-    const lastValue = isFirstValue ? 0 : bins[index - 1];
-    const label = `${Math.round(lastValue)} - ${Math.round(bin)}`;
+    const lastValue = isFirstValue ? 0 : bins[index - 1].value;
     const data: Array<IDataPoint> = [];
     selectedMarkers.map((marker) => {
       const {position} = marker;
       ymdDates.map((date, index) => {
         const observation = observations[date][position.index] ?? 0;
-        if (observation > lastValue && observation <= bin) {
+        if (observation > lastValue && observation <= bin.value) {
           const key = placename(position, placenames);
           if (index !== ymdDates.length) {
             const startValue = formatDate(new Date(date));
@@ -119,10 +112,8 @@ const ColorbarPlot = () => {
     })
     if (data.length) {
       datasets.push({
-        label,
         data,
-        backgroundColor: getColorForValue(bin, bins[0], bins[bins.length - 1])
-
+        backgroundColor: bin.color
       });
     }
   });

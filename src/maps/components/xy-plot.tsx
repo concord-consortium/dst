@@ -18,6 +18,8 @@ import { useDataSet } from '../hooks/use-dataset';
 import { useGlobalStateContext } from '../hooks/use-global-state';
 import { Line } from 'react-chartjs-2'
 import { placename } from '../helpers/placename';
+import { dynamicRound } from '../helpers/dynamic-round';
+import { hexToRGBA } from '../helpers/color-helpers';
 
 import "./xy-plot.css"
 
@@ -66,6 +68,15 @@ function XYPlot() {
           display: false,
           text: `${info.observationName} from ${labels[0]} to ${labels[labels.length - 1]}`
         },
+        tooltip: {
+          callbacks: {
+            label: function(context: any) {
+              const placename = context.dataset.label;
+              const observation = context.parsed.y ? context.parsed.y : 0;
+              return `${placename}: ${dynamicRound(observation)} ${info.units}`;
+            }
+          }
+        },
         annotation: {
           annotations: {
             box1: {
@@ -88,8 +99,10 @@ function XYPlot() {
     return {
       label,
       data,
-      borderColor: color,
-      backgroundColor: color,
+      borderColor: hexToRGBA(color, .5),
+      backgroundColor: `#${color}`,
+      borderWidth: 2,
+      pointRadius: 2
     }
   })
 

@@ -1,17 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { MapContainer, Marker, Pane, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
-import { icon, Icon, LatLngExpression } from 'leaflet';
-
+import { icon, LatLngExpression } from 'leaflet';
 import { useDataSet } from '../hooks/use-dataset';
 import { useGlobalStateContext } from '../hooks/use-global-state';
 import { IPosition, IMarker } from '../types';
-import { Color, colors } from '../helpers/colors';
+import { colors } from '../helpers/colors';
 import { createWebGLHeatmap } from "./webgl-heatmap.js"
 import { useOptionsContext } from '../hooks/use-options.js';
+import { placename } from '../helpers/placename.js';
 
 import 'leaflet/dist/leaflet.css';
 import "./map.css"
-import { placename } from '../helpers/placename.js';
 
 const scaleSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABYwAAAABCAYAAAB9uep6AAAAAXNSR0IArs4c6QAAAo1JREFUWEfVWN26gzAIq+//znaf/YNAsLV6Ls5uNqdSGkKCHud55nQcKeWc0pFSyql8X4fjuP2dyuc6IR880mdrgGyu73fKffXXONbrQh5XfkfKJTFcv6ct+fl1bZ6Sh4nn1r/gaeuqhdi+6+ln+PSdhziWukh9oC4dn4HgKt4r1zU073hRNszrvIw3VHPQr+EogFt+CA4EH8pPyRP5Ylk9uY7wQ/dNLz/y+wHeE/4gb2NeSB9jI8/6dcrHHrjlSfkIOsKZ8Bk+ph6w7943TrW0fszxkb4mfGyhRpTlfkUlfF8X0686PNVzI/BqH6iv9/g4PnZemPVpXUC/mLuIM2zjQ/X8zt96HjkdxL98Hg9xnOhp9beYZ1P/dHpq4oX+2petO4zxxsLO/W6CTztd9h3NIaDnH+Oz0K9+vuD47M0hxj8HHjh/dWd8jbfrc6y01/N7f33Oxzl/AMdWn8oPIWbJGi+k8ybr15W+Fh83Edrh+NcAZudTPQ/Uccnj7bah5zlzPY+HejHGMhBywjPdV7Ih9QBg5nI0hpalBcTo+Et83Dxl8lzDW+GDNFKDwBwfmANaXcT3nfDe4wM3ysB07YfzQfk7rYNt7LafgD+jC4MHPYBZ89EPuPXswFULmJrnA0MZembbjMVrz2H/ER/UEz/42DI5/VnBh80N7r5Yz1A3hD9zvP2Dccgfy29jIJUP7/HheKMOYKPN++trfLbibeDD/UDmXPbCh/KxlIXzR/QE/b2+H4h9xM673t8exrvBh/H44tsuPnE89bxP+lYcUnju+0Xz0ffXZ3h327C+aBKK9UkF0PoTxKt4+/dpb/YD89xf4230arwvCf2N47M115D3fbq/GI/rPLHHRxbvByehOOUMvMCyAAAAAElFTkSuQmCC"
 
@@ -116,18 +115,10 @@ const HeatMap = () => {
 const createIcon = (colorName: string) => {
   return icon({
     iconUrl: `assets/marker-icon-${colorName}.png`,
-    iconSize: [25, 41],
+    iconSize: [21, 31],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
   })
-}
-
-const markerIcons: Record<Color, Icon> = {
-  "#2A81CB": createIcon("blue"),
-  "#FFD326": createIcon("gold"),
-  "#CB2B3E": createIcon("red"),
-  "#2AAD27": createIcon("green"),
-  "#CB8427": createIcon("orange"),
 }
 
 function MapMarker({marker}: {marker: IMarker}) {
@@ -136,6 +127,7 @@ function MapMarker({marker}: {marker: IMarker}) {
   const {position, color} = marker
   const {key, latLng} = position
   const label = placename(position, placenames)
+  const icon = createIcon(color);
 
   const handleRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
@@ -147,7 +139,7 @@ function MapMarker({marker}: {marker: IMarker}) {
   }
 
   return (
-    <Marker position={latLng} icon={markerIcons[color]}>
+    <Marker position={latLng} icon={icon}>
       <Popup>
         <div>{label}</div>
         <div><button onClick={handleRemove}>Remove Pin</button></div>
