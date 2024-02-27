@@ -13,7 +13,7 @@ import {
 } from 'chart.js'
 import annotationPlugin from "chartjs-plugin-annotation";
 ChartJS.register(annotationPlugin);
-import { formatDate } from '../helpers/format-date';
+import { formatDate, toDateUTC } from '../helpers/format-date';
 import { useDataSet } from '../hooks/use-dataset';
 import { useGlobalStateContext } from '../hooks/use-global-state';
 import { Line } from 'react-chartjs-2'
@@ -49,7 +49,7 @@ const options = {
 function XYPlot() {
   const { dataSet: { info, ymdDates, observations, placenames } } = useDataSet()
   const {globalState: {selectedMarkers, selectedYMDDate}} = useGlobalStateContext()
-  const labels = ymdDates.map(ymdDate => formatDate(new Date(ymdDate)))
+  const labels = ymdDates.map(ymdDate => formatDate(toDateUTC(ymdDate)))
   const [chartOptions, setChartOptions] = useState(options)
 
   useEffect(() => {
