@@ -6,7 +6,7 @@ import { Bar } from 'react-chartjs-2';
 import { placename } from "../helpers/placename";
 import { useDataSet } from "../hooks/use-dataset";
 import { useGlobalStateContext } from "../hooks/use-global-state";
-import { formatDate } from '../helpers/format-date';
+import { formatDate, toDateUTC } from '../helpers/format-date';
 import { dynamicRound } from '../helpers/dynamic-round';
 import { useColorBins } from '../hooks/use-color-bins';
 
@@ -29,13 +29,12 @@ const ColorbarPlot = () => {
   const {globalState: {selectedMarkers, selectedYMDDate}} = useGlobalStateContext()
   const { observations, ymdDates, placenames, info } = dataSet;
   const labels = selectedMarkers.map((marker) => placename(marker.position, placenames))
-
   const yLabels = ymdDates.map((ymd) => formatDate(new Date(ymd)));
   // get next month and add to yLabels
-  const nextMonth = new Date(ymdDates[ymdDates.length - 1]).getMonth() + 1;
-  const year = new Date(ymdDates[ymdDates.length - 1]).getFullYear();
-  const nextMonthDate = formatDate(new Date(year, nextMonth));
-  yLabels.push(nextMonthDate);
+  const lastDateMonth = toDateUTC(ymdDates[ymdDates.length - 1]).getMonth() + 1;
+  const lastDateYear = toDateUTC(ymdDates[ymdDates.length - 1]).getFullYear();
+  const lastDate = formatDate(new Date(lastDateYear, lastDateMonth));
+  yLabels.push(lastDate);
 
   const options = {
     animation: {
@@ -102,11 +101,9 @@ const ColorbarPlot = () => {
         const observation = observations[date][position.index] ?? 0;
         if (observation > lastValue && observation <= bin.value) {
           const key = placename(position, placenames);
-          if (index !== ymdDates.length) {
-            const startValue = formatDate(new Date(date));
-            const endValue = formatDate(new Date(yLabels[index + 1]));
-            data.push({x: key, y: [startValue, endValue]});
-          }
+          const startValue = formatDate(toDateUTC(date));
+          const endValue = yLabels[index + 1];
+          data.push({x: key, y: [startValue, endValue]});
         }
       })
     })

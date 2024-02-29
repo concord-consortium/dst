@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useDataSet } from "../hooks/use-dataset"
 import { useGlobalStateContext } from "../hooks/use-global-state"
-import { formatDate } from "../helpers/format-date"
+import { formatDate, toDateUTC } from "../helpers/format-date"
 import { useOptionsContext } from "../hooks/use-options"
 
 import "./time-slider.css"
@@ -39,7 +39,7 @@ function TimeSlider() {
   }, [isPlaying, lastDateIndex, animationDuration])
 
   const displayDates = useMemo(() => {
-    return ymdDates.map(ymdDate => formatDate(new Date(ymdDate)))
+    return ymdDates.map(ymdDate => formatDate(toDateUTC(ymdDate)))
   }, [ymdDates])
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
