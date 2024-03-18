@@ -62,6 +62,14 @@ function XYPlot() {
     const xMax = isLastDate ? ymdDates.length - 1 : ymdDates.indexOf(selectedYMDDate) + .5;
     const newOptions = {
       ...options,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: info.observationName + " (" + info.units + ")"
+          }
+        }
+      },
       plugins: {
         ...options.plugins,
         title: {
