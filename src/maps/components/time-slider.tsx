@@ -8,12 +8,33 @@ import "./time-slider.css"
 
 function TimeSlider() {
   const { dataSet: { ymdDates } } = useDataSet()
-  const { setGlobalState } = useGlobalStateContext()
-  const [value, setValue] = useState(0)
+  const { globalState: { selectedYMDDate }, setGlobalState } = useGlobalStateContext()
   const [isPlaying, setIsPlaying] = useState(false)
   const lastDateIndex = ymdDates.length - 1
   const {options: {animationDuration}} = useOptionsContext()
   const animationIntervalRef = useRef(0)
+  // this is used so value isn't captured in the new setValue method
+  const valueRef = useRef(0);
+
+  const value = useMemo(() => {
+    const newValue = Math.max(0, ymdDates.indexOf(selectedYMDDate ?? ""));
+    valueRef.current = newValue
+    return newValue
+  }, [selectedYMDDate, ymdDates]);
+
+  const updateGlobalState = useCallback((newValue: number) => {
+    setGlobalState(draft => {
+      draft.selectedYMDDate = ymdDates[newValue]
+    })
+  }, [setGlobalState, ymdDates]);
+
+  const setValue = useCallback((newValueOrCallback: number|((prevValue: number) => number)) => {
+    const newValue = typeof newValueOrCallback === "number"
+      ? newValueOrCallback
+      : newValueOrCallback(valueRef.current)
+    valueRef.current = newValue
+    updateGlobalState(newValue);
+  }, [value]);
 
   useEffect(() => {
     setGlobalState(draft => {
@@ -64,7 +85,12 @@ function TimeSlider() {
       <div>
         <input
           type="range"
-          min={0} step={1} max={lastDateIndex} value={value} onChange={handleChange}></input>
+          min={0}
+          step={1}
+          max={lastDateIndex}
+          value={value}
+          onChange={handleChange}
+        ></input>
         {displayDates[value]}
       </div>
       <div onClick={() => setValue(lastDateIndex)}>{displayDates[lastDateIndex]}</div>

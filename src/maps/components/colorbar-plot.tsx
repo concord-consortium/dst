@@ -9,6 +9,7 @@ import { useGlobalStateContext } from "../hooks/use-global-state";
 import { formatDate, toDateUTC } from '../helpers/format-date';
 import { dynamicRound } from '../helpers/dynamic-round';
 import { useColorBins } from '../hooks/use-color-bins';
+import { dragger, startAnnotationDragListener, stopAnnotationDragListener } from '../plugins/dragger';
 
 import "./colorbar-plot.css";
 
@@ -36,10 +37,13 @@ const ColorbarPlot = () => {
   const lastDate = formatDate(new Date(lastDateYear, lastDateMonth));
   yLabels.push(lastDate);
 
-  const options = {
+  // note: any is used here as the Bar type doesn't support the `events:` list but the code does
+  const options: any = {
     animation: {
       duration: 0,
     },
+    dragDirection: "upDown",
+    events: ['mousedown', 'mouseup', 'mousemove', 'mouseout', 'click'],
     plugins: {
       title: {
         display: false,
@@ -64,6 +68,12 @@ const ColorbarPlot = () => {
         }
       },
       annotation: {
+        enter() {
+          startAnnotationDragListener();
+        },
+        leave() {
+          stopAnnotationDragListener();
+        },
         annotations: {
           box1: {
             type: "box" as const,
@@ -115,10 +125,9 @@ const ColorbarPlot = () => {
     }
   });
 
-
   return (
     <div className="colorbar-container">
-      <Bar options={options} data={{labels, datasets}}/>
+      <Bar plugins={[dragger]} options={options} data={{labels, datasets}}/>
     </div>
   );
 }
