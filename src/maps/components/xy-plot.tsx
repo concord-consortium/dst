@@ -20,9 +20,9 @@ import { Line } from 'react-chartjs-2'
 import { placename } from '../helpers/placename';
 import { dynamicRound } from '../helpers/dynamic-round';
 import { hexToRGBA } from '../helpers/color-helpers';
+import { dragger, startAnnotationDragListener, stopAnnotationDragListener } from '../plugins/dragger';
 
 import "./xy-plot.css"
-
 
 ChartJS.register(
   CategoryScale,
@@ -35,6 +35,9 @@ ChartJS.register(
 );
 
 const options = {
+  animation: {
+    duration: 0,
+  },
   responsive: true,
   plugins: {
     legend: {
@@ -47,7 +50,8 @@ const options = {
 };
 
 function XYPlot() {
-  const { dataSet: { info, ymdDates, observations, placenames } } = useDataSet()
+  const { dataSet } = useDataSet()
+  const { info, ymdDates, observations, placenames } = dataSet
   const {globalState: {selectedMarkers, selectedYMDDate}} = useGlobalStateContext()
   const labels = ymdDates.map(ymdDate => formatDate(toDateUTC(ymdDate)))
   const [chartOptions, setChartOptions] = useState(options)
@@ -70,6 +74,8 @@ function XYPlot() {
           }
         }
       },
+      dragDirection: "leftRight",
+      events: ['mousedown', 'mouseup', 'mousemove', 'mouseout', 'click'],
       plugins: {
         ...options.plugins,
         title: {
@@ -86,6 +92,12 @@ function XYPlot() {
           }
         },
         annotation: {
+          enter() {
+            startAnnotationDragListener();
+          },
+          leave() {
+            stopAnnotationDragListener();
+          },
           annotations: {
             box1: {
               type: "box",
@@ -121,7 +133,7 @@ function XYPlot() {
 
   return (
     <div className='xy-plot'>
-      <Line options={chartOptions} data={data} />
+      <Line plugins={[dragger]} options={chartOptions} data={data} />
     </div>
   )
 }

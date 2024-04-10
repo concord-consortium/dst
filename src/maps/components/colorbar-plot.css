@@ -2,3 +2,7 @@
   height: 100%;
   padding: 5px;
 }
+
+.colorbar-container canvas {
+  cursor: pointer;
+}
