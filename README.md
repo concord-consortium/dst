@@ -42,3 +42,6 @@ To generate a new gradient to use for the map overlay:
 - Middle color: 108 234 186
 - End color: 0 66 117
 
+## Deployment
+
+S3 deployment is handled by GitHub Actions using OIDC for AWS authentication. See [deploy-setup.md in starter-projects](https://github.com/concord-consortium/starter-projects/blob/main/doc/deploy-setup.md) for how the AWS side is set up, and [docs/deploy.md](docs/deploy.md) for how deploys work in this repo.
